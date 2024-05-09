@@ -10,6 +10,8 @@ import { MainLayoutProps, MyAbortController } from "@/utils/types";
 import { PersonCardSkeleton } from "@/components/PersonCardSkeleton";
 import { PersonDataCard } from "@/components/PersonDataCard";
 import { ErrorCard } from "@/components/ErrorCard";
+import { useMyContext } from "@/providers/context/context";
+
 // Initialize Inter font with Latin subset
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +19,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const MainLayout: FunctionComponent<
   PropsWithChildren<MainLayoutProps>
 > = () => {
+  //get enable log value
+  const { enableLogs, updateValue } = useMyContext();
+
   const [activeBtnId, setActiveBtnId] = useState<string>("");
   const controllerRef = React.useRef<MyAbortController | null>(null);
 
@@ -55,6 +60,17 @@ export const MainLayout: FunctionComponent<
         "flex flex-col items-center p-12",
       )}
     >
+      <div className={classNames("mb-4")}>
+        Store Logs
+        <Button
+          onClick={() => updateValue(!enableLogs)} // Set activeBtnId when button is clicked
+          classname={"ml-4"}
+          active={enableLogs}
+        >
+          {enableLogs ? "ON" : "OFF"}{" "}
+          {/* Displaying person's name as button label */}
+        </Button>
+      </div>
       {/* Container for buttons with flex layout */}
       <div className={classNames("flex gap-2")}>
         {/* Mapping through Person data to render buttons */}
