@@ -1,11 +1,6 @@
 import { FunctionComponent, PropsWithChildren } from "react";
 import classNames from "classnames";
-
-// Define type for ErrorCardProps
-type ErrorCardProps = {
-  errorMessage?: string;
-  title?: string;
-};
+import { ErrorCardProps } from "@/utils/types";
 
 // Define component as a FunctionComponent with ErrorCardProps as props
 export const ErrorCard: FunctionComponent<

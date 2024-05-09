@@ -1,13 +1,7 @@
-import { FunctionComponent, PropsWithChildren } from "react";
 import classNames from "classnames";
 
-// Define type for PersonCardSkeletonProps
-type PersonCardSkeletonProps = {};
-
 // Define Card component as a FunctionComponent with PersonCardSkeletonProps as props
-export const PersonCardSkeleton: FunctionComponent<
-  PropsWithChildren<PersonCardSkeletonProps>
-> = ({}) => {
+export const PersonCardSkeleton = ({}) => {
   return (
     <div
       role="status"
@@ -35,32 +29,32 @@ export const PersonCardSkeleton: FunctionComponent<
           className={classNames(
             `h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4`,
           )}
-         />
+        />
         <div
           className={classNames(
             `h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5`,
           )}
-         />
+        />
         <div
           className={classNames(
             `h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5`,
           )}
-         />
+        />
         <div
           className={classNames(
             `h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5`,
           )}
-         />
+        />
         <div
           className={classNames(
             `h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5`,
           )}
-         />
+        />
         <div
           className={classNames(
             `h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]`,
           )}
-         />
+        />
       </div>
       <span className={classNames(`sr-only`)}>Loading...</span>
     </div>

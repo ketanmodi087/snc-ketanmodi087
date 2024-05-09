@@ -2,6 +2,7 @@
 import React, {
   FunctionComponent,
   PropsWithChildren,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -16,10 +17,9 @@ import { MainLayoutProps, MyAbortController } from "@/utils/types";
 import { PersonCardSkeleton } from "@/components/PersonCardSkeleton";
 import { PersonDataCard } from "@/components/PersonDataCard";
 import { ErrorCard } from "@/components/ErrorCard";
-import { useMyContext } from "@/providers/context/context";
 import { ClockComponent } from "@/components/ClockComponent";
 import { LogComponent } from "@/components/LogComponent";
-
+import { usePersonDetailsLogger } from "@/utils/customHooks/useDetailLogger";
 // Initialize Inter font with Latin subset
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +27,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const MainLayout: FunctionComponent<
   PropsWithChildren<MainLayoutProps>
 > = () => {
+  const timeRef = useRef<HTMLParagraphElement | null>(null);
   const [activeBtnId, setActiveBtnId] = useState<string>("");
   const controllerRef = React.useRef<MyAbortController | null>(null);
 
@@ -42,19 +43,25 @@ export const MainLayout: FunctionComponent<
   });
 
   // Function to cancel the ongoing request
-  const cancelRequest = () => {
+  const cancelRequest = useCallback(() => {
     if (controllerRef.current) {
-      controllerRef.current.abort(); // Abort the request
+      controllerRef.current.abort();
     }
-  };
+  }, []);
 
-  const handleChangeBtn = (value: string) => {
-    if (isFetching) {
-      cancelRequest(); // Cancel ongoing request if fetching and activeBtnId is truthy
-    }
-    setTimeout(() => refetch(), 0); // Refetch data after a short delay when activeBtnId changes
-    setActiveBtnId(value);
-  };
+  const handleChangeBtn = useCallback(
+    (value: string) => {
+      if (isFetching) {
+        cancelRequest();
+      }
+      setTimeout(() => refetch(), 0);
+      setActiveBtnId(value);
+    },
+    [isFetching, cancelRequest, refetch],
+  );
+
+  // Custom hook for data logging
+  usePersonDetailsLogger(data, timeRef);
 
   return (
     // Main container with flex layout, centered content
@@ -66,7 +73,7 @@ export const MainLayout: FunctionComponent<
       )}
     >
       <div className={classNames("mb-8 flex items-center")}>
-        <ClockComponent />
+        <ClockComponent timeRef={timeRef} />
         <LogComponent />
       </div>
       {/* Container for buttons with flex layout */}

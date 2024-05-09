@@ -1,11 +1,10 @@
 // import dependencies
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import classNames from "classnames";
+import { ClockComponentProps } from "@/utils/types";
 
 // ClockComponent component definition
-export const ClockComponent = () => {
-  const timeRef = useRef<HTMLParagraphElement>(null);
-
+export const ClockComponent = ({ timeRef }: ClockComponentProps) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const now = new Date();
@@ -16,7 +15,7 @@ export const ClockComponent = () => {
 
     // Clear the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, []); // Only run this effect once (on mount)
+  }, [timeRef]);
 
   return (
     <div className={classNames("mr-16")}>

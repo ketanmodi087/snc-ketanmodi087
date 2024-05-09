@@ -1,12 +1,6 @@
-import { MouseEventHandler, FunctionComponent, PropsWithChildren } from "react";
+import { FunctionComponent, PropsWithChildren } from "react";
 import classNames from "classnames";
-
-// Define type for ButtonProps
-type ButtonProps = {
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  active?: boolean;
-  classname?: string;
-};
+import { ButtonProps } from "@/utils/types";
 
 // Define Button component as a FunctionComponent with ButtonProps as props
 export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
