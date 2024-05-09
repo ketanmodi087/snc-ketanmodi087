@@ -1,5 +1,11 @@
 // import dependencies
-import React, { FunctionComponent, PropsWithChildren, useState } from "react";
+import React, {
+  FunctionComponent,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Inter } from "next/font/google";
 import classNames from "classnames";
 import { Button } from "@/components/Button";
@@ -11,6 +17,8 @@ import { PersonCardSkeleton } from "@/components/PersonCardSkeleton";
 import { PersonDataCard } from "@/components/PersonDataCard";
 import { ErrorCard } from "@/components/ErrorCard";
 import { useMyContext } from "@/providers/context/context";
+import { ClockComponent } from "@/components/ClockComponent";
+import { LogComponent } from "@/components/LogComponent";
 
 // Initialize Inter font with Latin subset
 const inter = Inter({ subsets: ["latin"] });
@@ -19,9 +27,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const MainLayout: FunctionComponent<
   PropsWithChildren<MainLayoutProps>
 > = () => {
-  //get enable log value
-  const { enableLogs, updateValue } = useMyContext();
-
   const [activeBtnId, setActiveBtnId] = useState<string>("");
   const controllerRef = React.useRef<MyAbortController | null>(null);
 
@@ -60,16 +65,9 @@ export const MainLayout: FunctionComponent<
         "flex flex-col items-center p-12",
       )}
     >
-      <div className={classNames("mb-4")}>
-        Store Logs
-        <Button
-          onClick={() => updateValue(!enableLogs)} // Set activeBtnId when button is clicked
-          classname={"ml-4"}
-          active={enableLogs}
-        >
-          {enableLogs ? "ON" : "OFF"}{" "}
-          {/* Displaying person's name as button label */}
-        </Button>
+      <div className={classNames("mb-8 flex items-center")}>
+        <ClockComponent />
+        <LogComponent />
       </div>
       {/* Container for buttons with flex layout */}
       <div className={classNames("flex gap-2")}>
