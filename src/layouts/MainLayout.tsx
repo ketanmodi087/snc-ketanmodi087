@@ -1,22 +1,48 @@
-// import dependancies
-import { FunctionComponent, PropsWithChildren, useState } from "react";
+// import dependencies
+import React, { FunctionComponent, PropsWithChildren, useState } from "react";
 import { Inter } from "next/font/google";
 import classNames from "classnames";
 import { Button } from "@/components/Button";
 import { Person } from "@/utils/common/person";
+import { fetchPerson } from "@/providers/query/person";
+import { useQuery } from "@tanstack/react-query";
+import { MainLayoutProps, MyAbortController } from "@/utils/types";
 
 // Initialize Inter font with Latin subset
 const inter = Inter({ subsets: ["latin"] });
-
-// Define props interface for MainLayout component
-type MainLayoutProps = {};
 
 // MainLayout component definition
 export const MainLayout: FunctionComponent<
   PropsWithChildren<MainLayoutProps>
 > = () => {
-  // State to manage active button ID
   const [activeBtnId, setActiveBtnId] = useState<string>("");
+  const controllerRef = React.useRef<MyAbortController | null>(null);
+
+  const { data, error, refetch, isFetching } = useQuery({
+    queryKey: ["fetchPerson"],
+    queryFn: async () => {
+      controllerRef.current = new AbortController();
+      const signal = controllerRef?.current.signal;
+      return await fetchPerson(activeBtnId, signal);
+    },
+    enabled: false,
+    retry: false,
+  });
+
+  // Function to cancel the ongoing request
+  const cancelRequest = () => {
+    if (controllerRef.current) {
+      controllerRef.current.abort(); // Abort the request
+    }
+  };
+
+  const handleChangeBtn = (value: string) => {
+    if (isFetching) {
+      cancelRequest(); // Cancel ongoing request if fetching and activeBtnId is truthy
+    }
+    setTimeout(() => refetch(), 0); // Refetch data after a short delay when activeBtnId changes
+    setActiveBtnId(value);
+  };
 
   return (
     // Main container with flex layout, centered content
@@ -27,14 +53,20 @@ export const MainLayout: FunctionComponent<
         "flex flex-col justify-center items-center",
       )}
     >
+      {isFetching && "Fetching"}{" "}
+      {/* Display "Fetching" when data is being fetched */}
+      {!isFetching && error && "Error"}{" "}
+      {/* Display "Error" if there is an error */}
+      {!isFetching && !error && data && JSON.stringify(data)}{" "}
+      {/* Display data if available */}
       {/* Container for buttons with flex layout */}
       <div className={classNames("flex gap-2")}>
         {/* Mapping through Person data to render buttons */}
         {Object.values(Person).map((person) => (
           <Button
             key={person}
-            onClick={() => setActiveBtnId(person)}
-            active={activeBtnId === person}
+            onClick={() => handleChangeBtn(person)} // Set activeBtnId when button is clicked
+            active={activeBtnId === person} // Set active state based on activeBtnId
           >
             {person} {/* Displaying person's name as button label */}
           </Button>
