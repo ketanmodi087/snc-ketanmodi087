@@ -7,7 +7,9 @@ import { Person } from "@/utils/common/person";
 import { fetchPerson } from "@/providers/query/person";
 import { useQuery } from "@tanstack/react-query";
 import { MainLayoutProps, MyAbortController } from "@/utils/types";
-
+import { PersonCardSkeleton } from "@/components/PersonCardSkeleton";
+import { PersonDataCard } from "@/components/PersonDataCard";
+import { ErrorCard } from "@/components/ErrorCard";
 // Initialize Inter font with Latin subset
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,15 +52,9 @@ export const MainLayout: FunctionComponent<
       className={classNames(
         inter.className,
         "h-screen w-screen",
-        "flex flex-col justify-center items-center",
+        "flex flex-col items-center p-12",
       )}
     >
-      {isFetching && "Fetching"}{" "}
-      {/* Display "Fetching" when data is being fetched */}
-      {!isFetching && error && "Error"}{" "}
-      {/* Display "Error" if there is an error */}
-      {!isFetching && !error && data && JSON.stringify(data)}{" "}
-      {/* Display data if available */}
       {/* Container for buttons with flex layout */}
       <div className={classNames("flex gap-2")}>
         {/* Mapping through Person data to render buttons */}
@@ -71,6 +67,19 @@ export const MainLayout: FunctionComponent<
             {person} {/* Displaying person's name as button label */}
           </Button>
         ))}
+      </div>
+      <div className={classNames("mt-12")}>
+        {isFetching && <PersonCardSkeleton />}
+        {/* Display "Fetching" when data is being fetched */}
+        {!isFetching && error && (
+          <ErrorCard
+            errorMessage="Sorry! We are unable to fetch data for this person."
+            title="Error"
+          />
+        )}
+        {/* Display "Error" if there is an error */}
+        {!isFetching && !error && data && <PersonDataCard data={data} />}
+        {/* Display data if available */}
       </div>
     </main>
   );
