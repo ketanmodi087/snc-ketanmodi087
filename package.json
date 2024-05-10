@@ -17,6 +17,7 @@
     "prettier": "^3.2.4",
     "react": "^18",
     "react-dom": "^18",
+    "ts-node": "^10.9.2",
     "tw-merge": "^0.0.1-alpha.3"
   },
   "devDependencies": {
