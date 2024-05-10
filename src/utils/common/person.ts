@@ -5,6 +5,12 @@ export type User = {
   title: string;
   followers: number;
   following: number;
+  companies?: [Company];
+};
+
+export type Company = {
+  id: number;
+  name: string;
 };
 
 export enum Person {
